@@ -9,11 +9,26 @@
       >
     </div>
 
-      <button 
-        class="flex justify-center items-center gap-2 md:gap-3 bg-white font-bold text-sm sm:text-xl border-2 border-rose-400 rounded-full py-3 px-8 sm:px-4 absolute bottom-[-28px] left-1/2 transform -translate-x-1/2 whitespace-nowrap min-w-[150px]">
+      <button *ngIf="quantity === 0"
+        (click)="addToCart()"
+        class="flex justify-center items-center gap-2 md:gap-3 bg-white font-bold text-sm sm:text-xl border-2 border-rose-400 rounded-full py-3 px-8 sm:px-4 absolute bottom-[-24px] left-1/2 transform -translate-x-1/2 whitespace-nowrap min-w-[150px]">
         <img src="/assets/images/icon-add-to-cart.svg" alt="add to cart icon" class="w-4 h-4 md:w-6 md:h-6">
         <p class="text-rose-900 font-semibold sm:text-sm">Add to cart</p>
       </button>
+
+      <div *ngIf="quantity > 0" class="bg-red flex justify-between rounded-full py-3 px-8 sm:px-4 absolute bottom-[-24px] left-1/2 transform -translate-x-1/2 whitespace-nowrap min-w-[150px]">
+
+        <button (click)="addToCart()" class="flex justify-center items-center w-6 h-6 rounded-full text-center border-2 border-white">
+            <img src="/assets/images/icon-decrement-quantity.svg" alt="decrement item quantity">
+        </button>
+
+        <span class="text-white">{{ quantity }}</span>
+
+        <button (click)="addToCart()" class="flex justify-center items-center w-6 h-6 rounded-full text-center border-2 border-white">
+            <img src="/assets/images/icon-increment-quantity.svg" alt="increment item quantity">
+        </button>
+
+      </div>
     </div>
   
     <div>

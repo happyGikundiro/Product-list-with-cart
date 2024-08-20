@@ -1,4 +1,5 @@
-<div class="bg-white  p-5 space-y-6">
+<div class="bg-white py-5 px-8">
+    <!-- <div class="space-y-6">
     <p class="font-bold text-xl text-red">Your Cart (0)</p>
 
     <div class="w-full flex justify-around text-center">
@@ -6,5 +7,44 @@
     </div>
 
     <p class="text-rose-500 text-sm text-center">Your added items will appear here</p>
+    </div> -->
+
+    <div class="space-y-6">
+        <p class="font-bold text-xl text-red">Your Cart (7)</p>
+
+        <div class="flex items-center justify-between mb-4" *ngFor="let item of cartItems">
+        <div>
+            <h2 class="text-rose-900 font-semibold">{{item.name}}</h2>
+            <div class="flex gap-4">
+            <p  class="text-red font-bold">{{item.quantity}} x</p>
+            <p  class="text-rose-500"> ${{item.price}}</p>
+            <p  class="text-rose-500 font-semibold">${{item.quantity * item.price}}</p>
+            </div>
+        </div>
+
+        <div class="flex justify-center items-center w-6 h-6 rounded-full text-center border-2 border-rose-400 ">
+            <img src="/assets/images/icon-remove-item.svg" alt="remove icont">
+        </div>
+        </div>
+
+        <div class="h-[1.5px] w-full bg-rose-100"></div>
+
+        <div class="flex justify-between items-center">
+            <p>Order Total</p>
+            <p class="text-rose-900 font-bold text-xl">$46.50</p>
+        </div>
+
+        <div class="flex justify-center items-center gap-3 bg-rose-50 py-3 rounded-md">
+            <div>
+                <img src="/assets/images/icon-carbon-neutral.svg" alt="neutral">
+            </div>
+            <p>This is a  <span class="font-semibold">carbon-neutral</span> delivery</p>
+        </div>
+
+        <button 
+        class="flex justify-center items-center bg-red text-white teaxt-sm w-full rounded-full py-3">Confirm Order
+        </button>
+
+    </div>
     
 </div>
