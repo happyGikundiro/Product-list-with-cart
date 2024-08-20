@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -6,5 +6,12 @@ import { Component } from '@angular/core';
   styleUrl: './button.component.css'
 })
 export class ButtonComponent {
+
+  @Input() text: string = 'Add to Carder';
+  @Input() backgroundColor: string = 'bg-white';
+  @Input() textColor: string = 'text-black';
+  @Input() width: string = 'w-auto';
+  @Input() borderRadius: string = 'rounded-md';
+  @Input() border: string = 'border-red';
 
 }
