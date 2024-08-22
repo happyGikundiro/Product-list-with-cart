@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject, catchError, throwError } from 'rxjs';
 import { Products } from '../model/model';
 
 @Injectable({
@@ -10,16 +10,19 @@ export class ProductsService {
 
   private dataUrl = '/data/data.json'
   private cartItems: Products[] = [];
-  cartCleared: EventEmitter<void> = new EventEmitter();
+  private cartSubject = new BehaviorSubject<Products[]>([]);
+
+  cartChanges$ = this.cartSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
   getProducts():Observable<Products[]>{
-    return this.http.get<Products[]>(this.dataUrl)
+    return this.http.get<Products[]>(this.dataUrl).pipe(
+      catchError(this.handleError)
+    );
   }
 
   addToCart(product: Products){
-    console.log('Adding to cart:', product.name);
     const existingProduct = this.cartItems.find(item => item.name === product.name)
 
     if(existingProduct){
@@ -27,7 +30,8 @@ export class ProductsService {
     } else {
       this.cartItems.push({...product, quantity: 1})
     }
-    console.log('Current cart items:', this.cartItems);
+
+    this.cartSubject.next(this.cartItems);
   }
 
   removeFromCart(product: Products) {
@@ -40,6 +44,7 @@ export class ProductsService {
         this.cartItems.splice(index, 1);
       }
     }
+    this.cartSubject.next(this.cartItems);
   }
 
   removeAllFromCart(product: Products) {
@@ -50,6 +55,7 @@ export class ProductsService {
         this.cartItems.splice(index, 1);
       } 
     }
+    this.cartSubject.next(this.cartItems);
   }
 
   getItemQuantity(product: Products): number {
@@ -63,8 +69,12 @@ export class ProductsService {
 
   clearCart(): void {
     this.cartItems = [];
-    console.log('Cart cleared:', this.cartItems);
-    this.cartCleared.emit();
+    this.cartSubject.next(this.cartItems);
   }
 
+  private handleError(error: HttpErrorResponse) {
+    console.error('An error occurred:', error.message);
+    return throwError(() => new Error('Something went wrong with the request'));
+  }
+  
 }

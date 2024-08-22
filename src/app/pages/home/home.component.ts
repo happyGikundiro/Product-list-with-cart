@@ -19,9 +19,10 @@ export class HomeComponent implements OnInit, OnDestroy{
   constructor(private productService: ProductsService){}
 
   ngOnInit(): void {
-    this.productSubscription = this.productService.getProducts().subscribe((data)=>{
-      this.products = data;
-    })
+    this.productSubscription = this.productService.getProducts().subscribe({
+      next: (data) => this.products = data,
+      error: (error) => console.error('Failed to load products', error)
+    });
   }
 
   ngOnDestroy(): void {
@@ -45,8 +46,8 @@ export class HomeComponent implements OnInit, OnDestroy{
 
   closeModal() {
     this.showModal = false;
-    this.productService.clearCart();
+    this.productService.clearCart(); 
+    this.cartItems = this.productService.getCartItems();
   }
-
   
 }

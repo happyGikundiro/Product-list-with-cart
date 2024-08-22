@@ -12,21 +12,20 @@ export class CartComponent implements OnInit, OnDestroy{
 
   cartItems: Products[] = [];
   @Output() confirmOrder = new EventEmitter<Products[]>();
-  private cartClearedSubscription!: Subscription;
+  cartSubscription!: Subscription
 
   constructor(private productService: ProductsService){}
 
   ngOnInit(): void {
-    this.cartItems = this.productService.getCartItems();
-
-    this.productService.cartCleared.subscribe(() => {
-      this.cartItems = [];
+    this.cartSubscription = this.productService.cartChanges$.subscribe({
+      next: (cartItems) => this.cartItems = cartItems,
+      error: (error) => console.error('Failed to load cart items', error)
     });
   }
-
+  
   ngOnDestroy(): void {
-    if (this.cartClearedSubscription) {
-      this.cartClearedSubscription.unsubscribe();
+    if(this.cartSubscription){
+      this.cartSubscription.unsubscribe()
     }
   }
 

@@ -1,52 +1,51 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Products } from '../../model/model';
+
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ProductsService } from '../../services/products.service';
+import { Products } from '../../model/model';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-card',
   templateUrl: './product-card.component.html',
-  styleUrl: './product-card.component.css'
+  styleUrl: './product-card.component.css',
 })
-export class ProductCardComponent implements OnInit, OnDestroy{
+export class ProductCardComponent implements OnInit, OnDestroy {
+  @Input() product!: Products;
+  quantity: number = 0;
+  private cartSubscription!: Subscription;
 
-  @Input() product!: Products
-  quantity:number = 0;
-  private cartClearedSubscription!: Subscription;
-
-  constructor(private productService: ProductsService){}
+  constructor(private productService: ProductsService) {}
 
   ngOnInit(): void {
-    this.quantity = this.productService.getItemQuantity(this.product)
-
-    this.productService.cartCleared.subscribe(() => {
-      this.quantity = 0;
-  });
+    this.updateQuantity();
+    this.cartSubscription = this.productService.cartChanges$.subscribe({
+      next: () => this.updateQuantity(),
+      error: (error) => console.error('Failed to update cart quantity', error)
+    });
   }
 
   ngOnDestroy(): void {
-    if (this.cartClearedSubscription) {
-      this.cartClearedSubscription.unsubscribe();
+    if(this.cartSubscription){
+    this.cartSubscription.unsubscribe();
     }
   }
 
-  // addToCart() {
-  //   this.productService.addToCart(this.product);
-  //   this.quantity++;
-  // }
-  addToCart() {
-    console.log('Product added:', this.product.name); // Check which product is being added
-    this.productService.addToCart(this.product);
-    this.quantity++;
-    console.log('Current quantity:', this.quantity); // Verify the quantity updates
+  updateQuantity() {
+    this.quantity = this.productService.getItemQuantity(this.product);
   }
-  
+
+  addToCart() {
+    this.productService.addToCart(this.product);
+    this.updateQuantity();
+  }
 
   removeFromCart() {
     this.productService.removeFromCart(this.product);
-    if (this.quantity > 0) {
-      this.quantity--;
-    }
+    this.updateQuantity();
   }
 
+  isInCart(): boolean {
+    return this.quantity > 0;
+  }
 }
+
