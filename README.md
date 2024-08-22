@@ -22,7 +22,7 @@ You can see a live demo of the form [here](https://gamh-product-list.netlify.app
 
 ## Screenshot
 
-<!-- ![Screenshot 2024-07-01 082156](https://github.com/happyGikundiro/Password-Generator-App/assets/172483008/19f93181-d18e-4dc4-b141-557afa63f4c8) -->
+![Screenshot 2024-08-22 082659](https://github.com/user-attachments/assets/cc30f501-ff14-4d9d-a2b8-155644a1191f)
 
 ## Installation
 To get a local copy up and running, follow these simple steps.
