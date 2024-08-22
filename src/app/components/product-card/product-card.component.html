@@ -1,7 +1,8 @@
    <div class="mb-10 space-y-6 cursor-pointer relative">
     
     <div class="relative mb-14"> 
-    <div class="h-[350px] sm:h-[250px] overflow-hidden rounded-xl">
+    <div class="h-[350px] sm:h-[250px] overflow-hidden rounded-xl"
+         [ngClass]="{'border-2 border-red': quantity > 0}">
       <img 
         [src]="product.image.desktop" 
         [alt]="product.category" 
@@ -9,16 +10,17 @@
       >
     </div>
 
-      <button *ngIf="quantity === 0"
+
+        <button *ngIf="quantity === 0"
         (click)="addToCart()"
-        class="flex justify-center items-center gap-2 md:gap-3 bg-white font-bold text-sm sm:text-xl border-2 border-rose-400 rounded-full py-3 px-8 sm:px-4 absolute bottom-[-24px] left-1/2 transform -translate-x-1/2 whitespace-nowrap min-w-[150px]">
+        class="flex justify-center items-center gap-2 md:gap-3 bg-white font-bold text-sm sm:text-xl border-2 border-rose-400 hover:border-red group rounded-full py-3 px-8 sm:px-4 absolute bottom-[-24px] left-1/2 transform -translate-x-1/2 whitespace-nowrap min-w-[150px]">
         <img src="/assets/images/icon-add-to-cart.svg" alt="add to cart icon" class="w-4 h-4 md:w-6 md:h-6">
-        <p class="text-rose-900 font-semibold sm:text-sm">Add to cart</p>
+        <p class="text-rose-900 group-hover:text-red font-semibold sm:text-sm">Add to cart</p>
       </button>
 
       <div *ngIf="quantity > 0" class="bg-red flex justify-between rounded-full py-3 px-8 sm:px-4 absolute bottom-[-24px] left-1/2 transform -translate-x-1/2 whitespace-nowrap min-w-[150px]">
 
-        <button (click)="addToCart()" class="flex justify-center items-center w-6 h-6 rounded-full text-center border-2 border-white">
+        <button (click)="removeFromCart()" class="flex justify-center items-center w-6 h-6 rounded-full text-center border-2 border-white ">
             <img src="/assets/images/icon-decrement-quantity.svg" alt="decrement item quantity">
         </button>
 
@@ -34,6 +36,6 @@
     <div>
       <p class="text-xl text-rose-500 sm:text-lg">{{ product.category }}</p>
       <h3 class="font-semibold text-xl text-rose-900 break-words sm:text-lg">{{ product.name }}</h3>
-      <p class="text-red font-semibold text-xl sm:text-lg">${{ product.price }}</p>
+      <p class="text-red font-semibold text-xl sm:text-lg">${{ product.price.toFixed(2) }}</p>
     </div>
   </div>

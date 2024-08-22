@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Products } from '../model/model';
 
@@ -8,8 +8,9 @@ import { Products } from '../model/model';
 })
 export class ProductsService {
 
-  private dataUrl = 'data/data.json'
+  private dataUrl = '/data/data.json'
   private cartItems: Products[] = [];
+  cartCleared: EventEmitter<void> = new EventEmitter();
 
   constructor(private http: HttpClient) { }
 
@@ -18,6 +19,7 @@ export class ProductsService {
   }
 
   addToCart(product: Products){
+    console.log('Adding to cart:', product.name);
     const existingProduct = this.cartItems.find(item => item.name === product.name)
 
     if(existingProduct){
@@ -25,6 +27,7 @@ export class ProductsService {
     } else {
       this.cartItems.push({...product, quantity: 1})
     }
+    console.log('Current cart items:', this.cartItems);
   }
 
   removeFromCart(product: Products) {
@@ -39,6 +42,16 @@ export class ProductsService {
     }
   }
 
+  removeAllFromCart(product: Products) {
+    const index = this.cartItems.findIndex(item => item.name === product.name);
+    if (index !== -1 && this.cartItems[index]) {
+      const existingProduct = this.cartItems[index];
+      if (existingProduct.quantity) {
+        this.cartItems.splice(index, 1);
+      } 
+    }
+  }
+
   getItemQuantity(product: Products): number {
     const item = this.cartItems.find(item => item.name === product.name);
     return item?.quantity ?? 0;
@@ -47,5 +60,11 @@ export class ProductsService {
   getCartItems(): Products[] {
     return this.cartItems;
   }
-  
+
+  clearCart(): void {
+    this.cartItems = [];
+    console.log('Cart cleared:', this.cartItems);
+    this.cartCleared.emit();
+  }
+
 }

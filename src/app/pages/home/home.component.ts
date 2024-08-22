@@ -12,13 +12,15 @@ export class HomeComponent implements OnInit, OnDestroy{
 
   products: Products[] = [];
   productSubscription!: Subscription;
+  cartItems: Products[] = [];
+
+  showModal: boolean = false; 
 
   constructor(private productService: ProductsService){}
 
   ngOnInit(): void {
     this.productSubscription = this.productService.getProducts().subscribe((data)=>{
       this.products = data;
-      console.log(data)
     })
   }
 
@@ -27,4 +29,24 @@ export class HomeComponent implements OnInit, OnDestroy{
       this.productSubscription.unsubscribe()
     }
   }
+
+  onOrderConfirm(cartItems: Products[]) {
+    this.cartItems = cartItems;
+    this.showModal = true;
+  }
+
+  getTotalPrice(): string {
+    let total = 0;
+    for (const item of this.cartItems) {
+      total += (item.quantity ?? 0) * item.price;
+    }
+    return total.toFixed(2);
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.productService.clearCart();
+  }
+
+  
 }
